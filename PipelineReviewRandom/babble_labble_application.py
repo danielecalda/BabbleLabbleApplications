@@ -23,7 +23,7 @@ def train():
     exp_io = ExplanationIO()
     explanations = exp_io.read(DATA_FILE3)
 
-    babbler = Babbler(Cs, Ys,apply_filters=False)
+    babbler = Babbler(Cs, Ys, apply_filters=False)
 
     babbler.apply(explanations, split=0)
 

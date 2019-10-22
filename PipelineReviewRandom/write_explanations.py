@@ -1,6 +1,7 @@
 import pickle
 from babble import Explanation
 from babble.utils import ExplanationIO
+import progressbar
 
 DATA_FILE1 = 'data/train_labels.pkl'
 DATA_FILE2 = 'data/tokens_train_list.pkl'
@@ -19,7 +20,7 @@ def write_explanations():
     index = 0
     explanations = []
 
-    for label, selected_words in zip(labels, tokens_list):
+    for label, selected_words in progressbar.progressbar(zip(labels, tokens_list)):
 
         for word in selected_words:
             explanation = Explanation(

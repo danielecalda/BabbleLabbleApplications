@@ -1,6 +1,7 @@
 import pickle
 import random
 import spacy
+import progressbar
 
 
 DATA_FILE1 = 'data/train_examples.pkl'
@@ -38,7 +39,7 @@ def extract_token():
 
     spacy_nlp = spacy.load('en_core_web_sm')
 
-    for example, perturbation, random_numbers in zip(examples, perturbations, random_numbers_list):
+    for example, perturbation, random_numbers in progressbar.progressbar(zip(examples, perturbations, random_numbers_list)):
         doc = spacy_nlp(example)
         tokenized_sentence = [token.text for token in doc if not token.is_stop and token.is_alpha]
 

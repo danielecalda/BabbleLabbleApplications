@@ -4,6 +4,7 @@ import collections
 import spacy
 from metal.contrib.info_extraction.mentions import RelationMention
 import numpy as np
+import progressbar
 
 
 DATA_FILE1 = 'data/train_examples.pkl'
@@ -22,28 +23,29 @@ def setup():
     test_list = []
 
     print("Reading from csv and splitting")
-    for i, line in enumerate(open('../data/reviews50k.json', 'r')):
-        if i < 7000:
+    for i, line in enumerate(open('../data/reviews200k.json', 'r')):
+        if i < 180000:
             train_list.append(json.loads(line))
-        if 6999 < i < 7300:
+        if 179999 < i < 190000:
             dev_list.append(json.loads(line))
-        if 7299 < i < 7600:
+        if 189999 < i < 200000:
             test_list.append(json.loads(line))
 
+    print(len(train_list))
     train_reviews = []
-    for i in range(1, 6):
+    for i in range(0, 6):
         j = 0
         for line in train_list:
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 199:
+            if j > 9999:
                 break
 
     train_examples = [review['text'] for review in train_reviews]
     train_labels = [review['stars'] for review in train_reviews]
 
-    collections.Counter(train_labels)
+    print(collections.Counter(train_labels))
 
     with open(DATA_FILE1, 'wb') as f:
         pickle.dump(train_examples, f)
@@ -75,7 +77,7 @@ def setup():
 
     spacy_nlp = spacy.load('en_core_web_sm')
 
-    for example in train_examples:
+    for example in progressbar.progressbar(train_examples):
         doc = spacy_nlp(example)
 
         words, char_offsets, pos_tags, ner_tags, entity_types = ([] for i in range(5))
@@ -94,7 +96,7 @@ def setup():
 
     dev_results = []
 
-    for example in dev_examples:
+    for example in progressbar.progressbar(dev_examples):
         doc = spacy_nlp(example)
 
         words, char_offsets, pos_tags, ner_tags, entity_types = ([] for i in range(5))
@@ -113,7 +115,7 @@ def setup():
 
     test_results = []
 
-    for example in test_examples:
+    for example in progressbar.progressbar(test_examples):
         doc = spacy_nlp(example)
 
         words, char_offsets, pos_tags, ner_tags, entity_types = ([] for i in range(5))
