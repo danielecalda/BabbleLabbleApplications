@@ -26,9 +26,9 @@ def setup():
     for i, line in enumerate(open('../data/reviews200k.json', 'r')):
         if i < 180000:
             train_list.append(json.loads(line))
-        if 179999 < i < 190000:
+        if 179999 < i < 181000:
             dev_list.append(json.loads(line))
-        if 189999 < i < 200000:
+        if 180999 < i < 182000:
             test_list.append(json.loads(line))
 
     print(len(train_list))
@@ -39,7 +39,7 @@ def setup():
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 9999:
+            if j > 999:
                 break
 
     train_examples = [review['text'] for review in train_reviews]

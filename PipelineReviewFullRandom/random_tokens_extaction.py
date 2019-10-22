@@ -5,19 +5,19 @@ import progressbar
 
 
 DATA_FILE1 = 'data/train_examples.pkl'
-DATA_FILE2 = 'data/train_labels.pkl'
-DATA_FILE3 = 'data/tokens_train_list.pkl'
-DATA_FILE4 = 'data/random_numbers_list.pkl'
-DATA_FILE5 = 'data/perturbations.pkl'
 
 
-def extract_token():
+def extract_token(iteration_number):
     print("Extracting tokens")
+
+    DATA_FILE3 = 'data/tokens/tokens_train_list' + str(iteration_number - 1) + '.pkl'
+    DATA_FILE4 = 'data/numbers/random_numbers_list' + str(iteration_number - 1) + '.pkl'
+    DATA_FILE5 = 'data/perturbations/perturbations' + str(iteration_number - 1) + '.pkl'
+    DATA_FILE6 = 'data/tokens/tokens_train_list' + str(iteration_number) + '.pkl'
+    DATA_FILE7 = 'data/numbers/random_numbers_list' + str(iteration_number) + '.pkl'
 
     with open(DATA_FILE1, 'rb') as f:
         examples = pickle.load(f)
-    with open(DATA_FILE2, 'rb') as f:
-        stars = pickle.load(f)
     try:
         with open(DATA_FILE5, 'rb') as f:
             perturbations = pickle.load(f)
@@ -55,10 +55,10 @@ def extract_token():
     print(tokens_train_list[0])
     print(new_tokens_train_list[0])
 
-    with open(DATA_FILE3, 'wb') as f:
+    with open(DATA_FILE6, 'wb') as f:
         pickle.dump(new_tokens_train_list, f)
 
-    with open(DATA_FILE4, 'wb') as f:
+    with open(DATA_FILE7, 'wb') as f:
         pickle.dump(new_random_numbers_list, f)
 
     print("Done")

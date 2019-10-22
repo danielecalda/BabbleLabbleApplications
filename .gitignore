@@ -6,5 +6,5 @@ data
 PersonGpeExample
 PipelineReviewPos
 PipelineReviewLime
-PipelineReviewRandom/data
-PipelineReviewRandom/__pycache__
+PipelineReviewFullRandom/data
+PipelineReviewFullRandom/__pycache__
