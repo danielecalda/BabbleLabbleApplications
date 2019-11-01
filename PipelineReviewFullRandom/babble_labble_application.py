@@ -62,9 +62,9 @@ def train(iteration_number):
         if int(right) != wrong:
             len_wrong_test += 1
 
-    training_accuracy = percentage(len_wrong_train,len(Ys[0]))
+    training_accuracy = percentage(len(Ys[0]) - len_wrong_train, len(Ys[0]))
 
-    test_accuracy = percentage(len_wrong_test, len(Ys[2]))
+    test_accuracy = percentage(len(Ys[2]) - len_wrong_test, len(Ys[2]))
 
     print("Number of wrong in training set: " + str(len_wrong_train))
     print("Number of wrong in test set: " + str(len_wrong_test))
