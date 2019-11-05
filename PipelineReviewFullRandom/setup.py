@@ -39,11 +39,11 @@ def setup():
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 999:
+            if j > 99:
                 break
 
-    train_examples = [review['text'] for review in train_reviews]
-    train_labels = [review['stars'] for review in train_reviews]
+    train_examples = [review['text'].lower() for review in train_reviews]
+    train_labels = [int(review['stars']) for review in train_reviews]
 
     print(collections.Counter(train_labels))
 
@@ -52,8 +52,8 @@ def setup():
     with open(DATA_FILE4, 'wb') as f:
         pickle.dump(train_labels, f)
 
-    dev_examples = [review['text'] for review in dev_list]
-    dev_labels = [review['stars'] for review in dev_list]
+    dev_examples = [review['text'].lower() for review in dev_list]
+    dev_labels = [int(review['stars']) for review in dev_list]
 
     with open(DATA_FILE2, 'wb') as f:
         pickle.dump(dev_examples, f)
@@ -61,8 +61,8 @@ def setup():
     with open(DATA_FILE5, 'wb') as f:
         pickle.dump(dev_labels, f)
 
-    test_examples = [review['text'] for review in test_list]
-    test_labels = [review['stars'] for review in test_list]
+    test_examples = [review['text'].lower() for review in test_list]
+    test_labels = [int(review['stars']) for review in test_list]
 
     with open(DATA_FILE3, 'wb') as f:
         pickle.dump(test_examples, f)
