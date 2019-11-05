@@ -18,7 +18,7 @@ neu_adjectives_list = []
 neg_adjectives_list = []
 
 
-def write_explanations():
+def write_explanations1():
     print("Writing explanations")
 
     with open(DATA_FILE1, 'rb') as f:
@@ -31,6 +31,7 @@ def write_explanations():
 
     explanations = []
     index = 1
+
 
     for candidate, label in progressbar.progressbar(zip(reviews[0], labels[0])):
         #    print(candidate.text)
@@ -55,6 +56,65 @@ def write_explanations():
                 )
                 explanations.append(explanation)
                 index = index + 1
+    #            print(str(explanation).upper())
+
+    pos_adjectives_list_ = list(dict.fromkeys(pos_adjectives_list))
+    neu_adjectives_list_ = list(dict.fromkeys(neu_adjectives_list))
+    neg_adjectives_list_ = list(dict.fromkeys(neg_adjectives_list))
+
+    with open(DATA_FILE3, 'wb') as f:
+        pickle.dump(pos_adjectives_list_, f)
+
+    with open(DATA_FILE4, 'wb') as f:
+        pickle.dump(neu_adjectives_list_, f)
+
+    with open(DATA_FILE5, 'wb') as f:
+        pickle.dump(neg_adjectives_list_, f)
+
+    exp_io = ExplanationIO()
+    exp_io.write(explanations, DATA_FILE6)
+    exp_io.read(DATA_FILE6)
+
+    print("Done")
+
+def write_explanations2():
+    print("Writing explanations")
+
+    with open(DATA_FILE1, 'rb') as f:
+        reviews = pickle.load(f)
+
+    with open(DATA_FILE2, 'rb') as f:
+        labels = pickle.load(f)
+
+    entity_names = ['X', 'Y', 'Z']
+
+    explanations = []
+    index = 1
+
+    for candidate, label in progressbar.progressbar(zip(reviews[0], labels[0])):
+        #    print(candidate.text)
+        condition = ''
+        for entity, name in zip(candidate.entities, entity_names):
+            #        print(entity.entity)
+            adjective = check_adjectives_after_verb(candidate.text, entity.entity)
+            if adjective != None:
+                sentiment_value = check_sentiment_adjective(adjective)
+                condition = condition + 'A ' + sentiment_value + ' word is within 3 words to the right of ' + name + ' and '
+            else:
+                adjective = check_adjectives_before_pos(candidate.text, entity.entity)
+                if adjective != None:
+                    sentiment_value = check_sentiment_adjective(adjective)
+                    condition = condition + 'A ' + sentiment_value + ' word is within 2 words to the left of ' + name + ' and '
+        condition = condition[:-4]
+        if condition != '':
+            explanation = Explanation(
+                name='LF_' + str(index),
+                label=label,
+                condition=condition,
+                candidate=candidate,
+            )
+            explanations.append(explanation)
+            index = index + 1
     #            print(str(explanation).upper())
 
     pos_adjectives_list_ = list(dict.fromkeys(pos_adjectives_list))
