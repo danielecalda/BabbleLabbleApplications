@@ -26,12 +26,15 @@ def extract_token(iteration_number):
 
     tokens_train_list = []
 
-
     spacy_nlp = spacy.load('en_core_web_sm')
+
+    print(len(examples))
+    print(len(labels))
+    print(len(correct_tokens_list))
 
     for example, label, correct_tokens in progressbar.progressbar(zip(examples, labels, correct_tokens_list)):
         doc = spacy_nlp(example)
-        tokenized_sentence = [token.text for token in doc if not token.is_stop and token.is_alpha]
+        tokenized_sentence = [token.text for token in doc if not token.is_stop and token.is_alpha and token.pos_ not in ('SYM')]
 
         selected_words = select_random_words(tokenized_sentence, label, correct_tokens)
         tokens_train_list.append(selected_words)

@@ -24,11 +24,11 @@ def setup():
 
     print("Reading from csv and splitting")
     for i, line in enumerate(open('../data/reviews200k.json', 'r')):
-        if i < 180000:
+        if i < 100000 and 300 < len(line) < 500:
             train_list.append(json.loads(line))
-        if 179999 < i < 181000:
+        if 99999 < i < 101000 and 300 < len(line) < 500:
             dev_list.append(json.loads(line))
-        if 180999 < i < 182000:
+        if 149999 < i < 200000 and 300 < len(line) < 500:
             test_list.append(json.loads(line))
 
     print(len(train_list))
@@ -39,7 +39,7 @@ def setup():
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 99:
+            if j > 499:
                 break
 
     train_examples = [review['text'].lower() for review in train_reviews]
@@ -61,8 +61,21 @@ def setup():
     with open(DATA_FILE5, 'wb') as f:
         pickle.dump(dev_labels, f)
 
-    test_examples = [review['text'].lower() for review in test_list]
-    test_labels = [int(review['stars']) for review in test_list]
+    print(len(test_list))
+    test_reviews = []
+    for i in range(0, 6):
+        j = 0
+        for line in test_list:
+            if i == int(line['stars']):
+                test_reviews.append(line)
+                j = j + 1
+            if j > 499:
+                break
+    test_examples = [review['text'].lower() for review in test_reviews]
+    test_labels = [int(review['stars']) for review in test_reviews]
+
+    print(collections.Counter(test_labels))
+
 
     with open(DATA_FILE3, 'wb') as f:
         pickle.dump(test_examples, f)
