@@ -13,6 +13,7 @@ def extract_token(iteration_number):
 
     DATA_FILE3 = 'data/tokens/correct_tokens_list' + str(iteration_number - 1) + '.pkl'
     DATA_FILE4 = 'data/tokens/tokens_train_list' + str(iteration_number) + '.pkl'
+    DATA_FILE5 = 'data/tokens/wrong_tokens_list.pkl'
 
     with open(DATA_FILE1, 'rb') as f:
         examples = pickle.load(f)
@@ -23,6 +24,11 @@ def extract_token(iteration_number):
             correct_tokens_list = pickle.load(f)
     except:
         correct_tokens_list = [[] for i in range(len(examples))]
+    try:
+        with open(DATA_FILE5, 'rb') as f:
+            wrong_tokens_list = pickle.load(f)
+    except:
+        wrong_tokens_list = [[] for i in range(len(examples))]
 
     tokens_train_list = []
 
@@ -31,37 +37,35 @@ def extract_token(iteration_number):
     print(len(examples))
     print(len(labels))
     print(len(correct_tokens_list))
+    print(len(wrong_tokens_list))
 
-    for example, label, correct_tokens in progressbar.progressbar(zip(examples, labels, correct_tokens_list)):
+    for example, label, correct_tokens, wrong_tokens in progressbar.progressbar(zip(examples, labels, correct_tokens_list, wrong_tokens_list)):
         doc = spacy_nlp(example)
         tokenized_sentence = [token.text for token in doc if not token.is_stop and token.is_alpha and token.pos_ not in ('SYM')]
 
-        selected_words = select_random_words(tokenized_sentence, label, correct_tokens)
+        selected_words = select_random_words(tokenized_sentence, label, correct_tokens, wrong_tokens)
         tokens_train_list.append(selected_words)
 
-    print(len(tokens_train_list))
-    print(correct_tokens_list[0])
-    print(tokens_train_list[0])
+    print('Correct tokens: ' + str(correct_tokens_list[0]))
+    print('Wrong tokens: ' + str(wrong_tokens_list[0]))
+    print('Choiced tokens: ' + str(tokens_train_list[0]))
 
     with open(DATA_FILE4, 'wb') as f:
         pickle.dump(tokens_train_list, f)
 
-    with open(DATA_FILE3, 'wb') as f:
-        pickle.dump(correct_tokens_list, f)
-
     print("Done")
 
 
-def select_random_words(tokens, label, correct_tokens):
+def select_random_words(tokens, label, correct_tokens, wrong_tokens):
     selected_words = []
     wrong_indexes = []
     choiced_indexes = []
     perturbation = 4 - len(correct_tokens)
-    while not (perturbation == 0):
+    while perturbation != 0 and len(choiced_indexes) + len(wrong_indexes) < len(tokens):
         index = random.sample(range(len(tokens)), 1)[0]
         if index not in wrong_indexes and index not in choiced_indexes:
             new = (tokens[index], label)
-            if new not in correct_tokens:
+            if new not in correct_tokens and new not in wrong_tokens:
                 perturbation = perturbation - 1
                 selected_words.append(new)
                 choiced_indexes.append(index)
