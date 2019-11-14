@@ -18,5 +18,6 @@ for i in range(1, 20):
 '''
 extract_nouns(1)
 extract_expressions(1)
+extract_expressions(1)
 write_explanations_for_expressions(1)
 train_for_expressions(1)
