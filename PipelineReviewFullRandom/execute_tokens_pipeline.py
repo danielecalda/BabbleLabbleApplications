@@ -9,7 +9,7 @@ filelist = ['data/train_examples.pkl', 'data/dev_examples.pkl', 'data/test_examp
                 , 'data/dev_labels.pkl', 'data/test_labels.pkl', 'data/data.pkl', 'data/labels.pkl']
 if not all([os.path.isfile(f) for f in filelist]):
     setup()
-for i in range(1, 20):
+for i in range(1, 30):
     extract_token(i)
     write_explanations_for_tokens(i)
     train_for_tokens(i)

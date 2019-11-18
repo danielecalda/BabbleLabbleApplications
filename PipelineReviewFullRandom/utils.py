@@ -47,15 +47,28 @@ def calculate_number_wrong(real, predicted):
     return len_wrong
 
 
-def high_coverage_elements(l_train):
-    over_percentage = []
+def average_coverage_elements(l_train):
+    coverages = []
     for i, line in enumerate(l_train):
         count = 0
         for element in line:
             if element != 0:
                 count += 1
         coverage = percentage(count, len(line))
-        if coverage > 0.1:
+        coverages.append(coverage)
+    return sum(coverages)/len(coverages)
+
+
+def high_coverage_elements(l_train):
+    over_percentage = []
+    average_coverage = average_coverage_elements(l_train)
+    for i, line in enumerate(l_train):
+        count = 0
+        for element in line:
+            if element != 0:
+                count += 1
+        coverage = percentage(count, len(line))
+        if coverage > 0.7:
             over_percentage.append(i)
             # print('Coverage of element number: ' + str(i) + ' is ' + str(coverage))
     print('number of over percentage is: ' + str(len(over_percentage)))
@@ -77,10 +90,10 @@ def high_correct_elements(l_train, ys):
                     correct += 1
                 else:
                     wrong += 1
-        if wrong > 2*correct:
-            wrong_elements.append(i)
-        else:
+        if correct > 1.2*wrong:
             correct_elements.append(i)
+        elif wrong > 3*correct:
+            wrong_elements.append(i)
             #print('abstain: ' + str(abstain) + ' and correct: ' + str(correct) + ' and wrong: ' + str(wrong))
     print('number of correct elements is: ' + str(len(correct_elements)))
     return correct_elements, wrong_elements

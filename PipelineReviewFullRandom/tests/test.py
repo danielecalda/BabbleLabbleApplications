@@ -4,16 +4,23 @@ import progressbar
 from babble import Babbler
 from src.PipelineReviewFullRandom.utils import most_frequent
 from src.PipelineReviewFullRandom.utils import calculate_number_wrong
-from src.PipelineReviewFullRandom.utils import percentage
+from src.PipelineReviewFullRandom.utils import percentage, average_coverage_elements
 
 DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'
-DATA_FILE3 = 'data/tokens/correct_tokens_list6.pkl'
-DATA_FILE4 = 'data/tokens/wrong_tokens_list.pkl'
 DATA_FILE7 = 'data/results/summary.txt'
 
 
 def apply_results():
+
+    best_iteration = get_best_iteration()
+
+    print(best_iteration)
+
+    DATA_FILE3 = 'data/tokens/correct_tokens_list' + str(best_iteration[1]) + '.pkl'
+    DATA_FILE4 = 'data/tokens/wrong_tokens_list' + str(best_iteration[1]) + '.pkl'
+    DATA_FILE5 = 'data/tokens/tokens_train_list' + str(best_iteration[1]) + '.pkl'
+
     with open(DATA_FILE1, 'rb') as f:
         Cs = pickle.load(f)
 
@@ -26,16 +33,24 @@ def apply_results():
     with open(DATA_FILE4, 'rb') as f:
         wrong_tokens_list = pickle.load(f)
 
+    with open(DATA_FILE5, 'rb') as f:
+        tokens_train_list = pickle.load(f)
+
     tokens = []
     for correct_tokens in correct_tokens_list:
         for token in correct_tokens:
             if token not in tokens:
                 tokens.append(token)
 
+    tokens2 = []
+    for tokens_train in tokens_train_list:
+        for token in tokens_train:
+            if token not in tokens2:
+                tokens2.append(token)
     index = 0
     explanations = []
 
-    for word in progressbar.progressbar(tokens):
+    for word in progressbar.progressbar(tokens2):
         explanation = Explanation(
             name='LF_' + str(index),
             label=word[1],
@@ -45,8 +60,6 @@ def apply_results():
 
         explanations.append(explanation)
         index = index + 1
-
-    print(explanations)
 
     babbler = Babbler(Cs, Ys)
 
@@ -88,18 +101,25 @@ def apply_results():
     print("Test Accuracy: " + str(test_accuracy))
 
 
+    new_train = L_train.T
+
 
 def create_condition(word):
     condition = 'the word ' + '"' + word + '" is in the sentence'
     return condition
 
-with open(DATA_FILE3, 'rb') as f:
-    correct_tokens_list = pickle.load(f)
+def get_best_iteration():
+    summary = open(DATA_FILE7, "r")
+    text = summary.readlines()
+    best = (0,0)
+    iteration = 0
+    for line in text:
+        if 'Test' in line:
+            iteration += 1
+            test_accuracy = float(line[15:19])
+            if test_accuracy > best[0]:
+                best = (test_accuracy, iteration)
+    return best
 
 #print(correct_tokens_list)
-#apply_results()
-
-sentence = 'there is a good atmosphere and the staff is great'
-
-if 'staff is great' in sentence:
-    print('ok')
+apply_results()

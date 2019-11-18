@@ -13,7 +13,7 @@ def extract_token(iteration_number):
 
     DATA_FILE3 = 'data/tokens/correct_tokens_list' + str(iteration_number - 1) + '.pkl'
     DATA_FILE4 = 'data/tokens/tokens_train_list' + str(iteration_number) + '.pkl'
-    DATA_FILE5 = 'data/tokens/wrong_tokens_list.pkl'
+    DATA_FILE5 = 'data/tokens/wrong_tokens_list' + str(iteration_number - 1) + '.pkl'
 
     with open(DATA_FILE1, 'rb') as f:
         examples = pickle.load(f)
@@ -60,15 +60,17 @@ def select_random_words(tokens, label, correct_tokens, wrong_tokens):
     selected_words = []
     wrong_indexes = []
     choiced_indexes = []
-    perturbation = 4 - len(correct_tokens)
-    while perturbation != 0 and len(choiced_indexes) + len(wrong_indexes) < len(tokens):
-        index = random.sample(range(len(tokens)), 1)[0]
-        if index not in wrong_indexes and index not in choiced_indexes:
-            new = (tokens[index], label)
-            if new not in correct_tokens and new not in wrong_tokens:
-                perturbation = perturbation - 1
-                selected_words.append(new)
-                choiced_indexes.append(index)
-            else:
-                wrong_indexes.append(index)
-    return selected_words + correct_tokens
+    if len(correct_tokens) < 5:
+        while len(selected_words) < 4 and len(choiced_indexes) + len(wrong_indexes) < len(tokens):
+            index = random.sample(range(len(tokens)), 1)[0]
+            if index not in wrong_indexes and index not in choiced_indexes:
+                new = (tokens[index], label)
+                if new not in correct_tokens and new not in wrong_tokens:
+                    selected_words.append(new)
+                    choiced_indexes.append(index)
+                else:
+                    wrong_indexes.append(index)
+        return selected_words + correct_tokens
+    else:
+        return correct_tokens
+

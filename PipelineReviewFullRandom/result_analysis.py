@@ -12,10 +12,12 @@ def analyze_for_tokens(ls, parses, iteration_number, modality='most'):
 
     DATA_FILE5 = 'data/results/predicted_training_labels'  + str(iteration_number) + '.pkl'
     DATA_FILE6 = 'data/tokens/correct_tokens_list' + str(iteration_number) + '.pkl'
+    DATA_FILE11 = 'data/tokens/correct_tokens_list' + str(iteration_number - 1) + '.pkl'
     DATA_FILE7 = 'data/results/summary.txt'
     DATA_FILE8 = 'data/results/predicted_test_labels' + str(iteration_number) + '.pkl'
     DATA_FILE9 = 'data/tokens/tokens_train_list' + str(iteration_number) + '.pkl'
-    DATA_FILE10 = 'data/tokens/wrong_tokens_list.pkl'
+    DATA_FILE10 = 'data/tokens/wrong_tokens_list' + str(iteration_number) + '.pkl'
+    DATA_FILE12 = 'data/tokens/wrong_tokens_list' + str(iteration_number -1) + '.pkl'
 
     with open(DATA_FILE2, 'rb') as f:
         Ys = pickle.load(f)
@@ -93,22 +95,30 @@ def analyze_for_tokens(ls, parses, iteration_number, modality='most'):
         wrong_explanation = parses[index].explanation
         wrong_explanations.append(wrong_explanation)
 
-    token_from_explanations = create_tokens_from_choiced_explanations(new_explanations)
+    correct_token_from_explanations = create_tokens_from_choiced_explanations(new_explanations)
     wrong_token_from_explanations = create_tokens_from_choiced_explanations(wrong_explanations)
 
-    correct_tokens_list = []
-    wrong_tokens_list = []
+    try:
+        with open(DATA_FILE11, 'rb') as f:
+            correct_tokens_list = pickle.load(f)
+    except:
+        correct_tokens_list = [[] for i in range(len(tokens_train_list))]
+    try:
+        with open(DATA_FILE12, 'rb') as f:
+            wrong_tokens_list = pickle.load(f)
+    except:
+        wrong_tokens_list = [[] for i in range(len(tokens_train_list))]
 
-    for tokens_list in tokens_train_list:
-        correct_tokens = []
-        wrong_tokens = []
+    for i,tokens_list in enumerate(tokens_train_list):
+        correct_tokens = correct_tokens_list[i]
+        wrong_tokens = wrong_tokens_list[i]
         for token in tokens_list:
-            if token in token_from_explanations:
-                correct_tokens.append(token)
-            if token in wrong_token_from_explanations:
-                wrong_tokens.append(token)
-        correct_tokens_list.append(correct_tokens)
-        wrong_tokens_list.append(wrong_tokens)
+            if token in correct_token_from_explanations and token not in correct_tokens:
+                correct_tokens_list[i].append(token)
+            if token in wrong_token_from_explanations and token not in wrong_tokens:
+                wrong_tokens_list[i].append(token)
+
+    print(correct_tokens_list)
 
     with open(DATA_FILE6, 'wb') as f:
         pickle.dump(correct_tokens_list, f)

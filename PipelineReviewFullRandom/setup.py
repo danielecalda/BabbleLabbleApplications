@@ -39,7 +39,7 @@ def setup():
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 199:
+            if j > 299:
                 break
 
     train_examples = [review['text'].lower() for review in train_reviews]
@@ -69,7 +69,7 @@ def setup():
             if i == int(line['stars']):
                 test_reviews.append(line)
                 j = j + 1
-            if j > 199:
+            if j > 99:
                 break
     test_examples = [review['text'].lower() for review in test_reviews]
     test_labels = [int(review['stars']) for review in test_reviews]
