@@ -2,9 +2,9 @@ import pickle
 from babble import Explanation
 import progressbar
 from babble import Babbler
-from src.PipelineReviewFullRandom.utils import most_frequent
-from src.PipelineReviewFullRandom.utils import calculate_number_wrong
-from src.PipelineReviewFullRandom.utils import percentage, average_coverage_elements
+from src.PipelineReviewRandomTokens.utils import most_frequent
+from src.PipelineReviewRandomTokens.utils import calculate_number_wrong
+from src.PipelineReviewRandomTokens.utils import percentage, average_coverage_elements
 
 DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'
@@ -99,9 +99,6 @@ def apply_results():
     print("Number of wrong in test set: " + str(len_wrong_test))
     print("Training Accuracy: " + str(training_accuracy))
     print("Test Accuracy: " + str(test_accuracy))
-
-
-    new_train = L_train.T
 
 
 def create_condition(word):

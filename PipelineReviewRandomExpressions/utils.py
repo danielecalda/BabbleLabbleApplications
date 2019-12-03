@@ -1,6 +1,7 @@
 from collections import Counter
 import re
 import spacy
+import random
 
 
 def most_frequent(line):
@@ -39,12 +40,27 @@ def intersection(lst1, lst2):
     return lst3
 
 
-def calculate_number_wrong(real, predicted):
+def calculate_number_wrong(real_labels, predicted_labels):
     len_wrong = 0
-    for right, wrong in zip(real, predicted):
-        if int(right) != wrong:
+    for real, predicted in zip(real_labels, predicted_labels):
+        if real != predicted:
             len_wrong += 1
     return len_wrong
+
+
+def calculate_number_wrong_no_abstain(real_labels, predicted_labels):
+    len_wrong = 0
+    no_abstain = 0
+    for real, predicted in zip(real_labels, predicted_labels):
+        if predicted != 0:
+            no_abstain += 1
+            if real != predicted and predicted != 0:
+                len_wrong += 1
+    if no_abstain > 0:
+        accuracy = percentage(no_abstain - len_wrong, no_abstain)
+    else:
+        accuracy = percentage(len(predicted_labels) - len_wrong, len(predicted_labels))
+    return len_wrong, accuracy
 
 
 def average_coverage_elements(l_train):
@@ -68,12 +84,23 @@ def high_coverage_elements(l_train):
             if element != 0:
                 count += 1
         coverage = percentage(count, len(line))
-        if coverage > 0.7:
+        if coverage > 0.3:
             over_percentage.append(i)
             # print('Coverage of element number: ' + str(i) + ' is ' + str(coverage))
     print('number of over percentage is: ' + str(len(over_percentage)))
     return over_percentage
 
+def high_correct_elements2(l_train):
+    correct_elements = []
+    wrong_elements = []
+    for i, line in enumerate(l_train):
+        counter = Counter(line)
+        values = list(counter.values())
+        if len(values) == 1:
+            correct_elements.append(i)
+            # print('abstain: ' + str(abstain) + ' and correct: ' + str(correct) + ' and wrong: ' + str(wrong))
+    print('number of correct elements is: ' + str(len(correct_elements)))
+    return correct_elements, wrong_elements
 
 def high_correct_elements(l_train, ys):
     correct_elements = []
@@ -90,7 +117,7 @@ def high_correct_elements(l_train, ys):
                     correct += 1
                 else:
                     wrong += 1
-        if correct > 1.2*wrong:
+        if correct > wrong:
             correct_elements.append(i)
         elif wrong > 3*correct:
             wrong_elements.append(i)
@@ -139,5 +166,3 @@ def check_adjective_after_verb(sentence,entity):
         doc = spacy_nlp(words)
         if doc[0].pos_ == 'VERB' and doc[1].pos_ == 'ADJ':
             return words
-
-

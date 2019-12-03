@@ -61,7 +61,7 @@ def select_random_words(tokens, label, correct_tokens, wrong_tokens):
     wrong_indexes = []
     choiced_indexes = []
     if len(correct_tokens) < 5:
-        while len(selected_words) < 4 and len(choiced_indexes) + len(wrong_indexes) < len(tokens):
+        while len(selected_words) < 3 and len(choiced_indexes) + len(wrong_indexes) < len(tokens):
             index = random.sample(range(len(tokens)), 1)[0]
             if index not in wrong_indexes and index not in choiced_indexes:
                 new = (tokens[index], label)

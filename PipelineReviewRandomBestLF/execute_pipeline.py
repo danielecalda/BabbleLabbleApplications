@@ -1,7 +1,7 @@
-from src.PipelineReviewFullRandom.setup import setup
-from src.PipelineReviewFullRandom.random_tokens_extaction import extract_token
-from src.PipelineReviewFullRandom.write_explanations import write_explanations
-from src.PipelineReviewFullRandom.babble_labble_application import train
+from src.PipelineReviewRandomTokens.setup import setup
+from src.PipelineReviewRandomTokens.random_tokens_extaction import extract_token
+from src.PipelineReviewRandomTokens.write_explanations import write_explanations
+from src.PipelineReviewRandomTokens.babble_labble_application import train
 import os
 
 
