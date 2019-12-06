@@ -1,4 +1,4 @@
-from src.PipelineReviewRandomTokens.setup import setup
+from src.utils.setup import setup
 from src.PipelineReviewRandomTokens.random_tokens_extaction import extract_token
 from src.PipelineReviewRandomTokens.write_explanations import write_explanations
 from src.PipelineReviewRandomTokens.babble_labble_application import train

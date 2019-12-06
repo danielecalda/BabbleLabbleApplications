@@ -2,9 +2,9 @@ import pickle
 from babble import Explanation
 import progressbar
 from babble import Babbler
-from src.PipelineReviewRandomTokens.utils import most_frequent
-from src.PipelineReviewRandomTokens.utils import calculate_number_wrong
-from src.PipelineReviewRandomTokens.utils import percentage, average_coverage_elements
+from src.utils.utils import most_frequent
+from src.utils.utils import calculate_number_wrong
+from src.utils.utils import percentage
 
 DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'

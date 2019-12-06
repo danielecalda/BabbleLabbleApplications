@@ -1,10 +1,8 @@
 import pickle
 import progressbar
 from babble import Babbler
-from babble.utils import ExplanationIO2
 from babble import Explanation
-from src.PipelineReviewRandomTokens.utils import most_frequent, calculate_number_wrong, percentage, calculate_number_wrong_no_abstain
-from collections import Counter
+from src.utils.utils import most_frequent, calculate_number_wrong_no_abstain
 
 DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'

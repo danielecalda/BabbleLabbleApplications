@@ -7,7 +7,7 @@ DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'
 
 
-def train_for_tokens(iteration_number, modality='most'):
+def train_for_tokens(iteration_number, coverage_treshold, correct_treshold, wrong_treshold, modality='most'):
     DATA_FILE3 = 'data/explanations/my_explanations_tokens' + str(iteration_number) + '.tsv'
     DATA_FILE4 = 'data/Ls/Ls' + str(iteration_number) + '.pkl'
 
@@ -36,6 +36,6 @@ def train_for_tokens(iteration_number, modality='most'):
     with open(DATA_FILE4, 'wb') as f:
         pickle.dump(Ls, f)
 
-    analyze_for_tokens(Ls, parses, iteration_number, modality)
+    analyze_for_tokens(Ls, parses, iteration_number, coverage_treshold, correct_treshold, wrong_treshold, modality)
 
     print("Done")

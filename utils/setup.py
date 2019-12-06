@@ -17,7 +17,7 @@ DATA_FILE7 = 'data/data.pkl'
 DATA_FILE8 = 'data/labels.pkl'
 
 
-def setup():
+def setup(train_size, dev_size, test_size):
     train_list = []
     dev_list = []
     test_list = []
@@ -26,7 +26,7 @@ def setup():
     for i, line in enumerate(open('../data/reviews200k.json', 'r')):
         if i < 100000 and len(line) > 300:
             train_list.append(json.loads(line))
-        if 99999 < i < 100000 and len(line) > 300:
+        if 99999 < i < 100500 and len(line) > 300:
             dev_list.append(json.loads(line))
         if 149999 < i < 200000 and len(line) > 300:
             test_list.append(json.loads(line))
@@ -39,7 +39,7 @@ def setup():
             if i == int(line['stars']):
                 train_reviews.append(line)
                 j = j + 1
-            if j > 99:
+            if j > train_size:
                 break
 
     train_examples = [review['text'].lower() for review in train_reviews]
@@ -52,8 +52,19 @@ def setup():
     with open(DATA_FILE4, 'wb') as f:
         pickle.dump(train_labels, f)
 
-    dev_examples = [review['text'].lower() for review in dev_list]
-    dev_labels = [int(review['stars']) for review in dev_list]
+    print(len(dev_list))
+    dev_reviews = []
+    for i in range(0, 6):
+        j = 0
+        for line in dev_list:
+            if i == int(line['stars']):
+                dev_reviews.append(line)
+                j = j + 1
+            if j > dev_size:
+                break
+
+    dev_examples = [review['text'].lower() for review in dev_reviews]
+    dev_labels = [int(review['stars']) for review in dev_reviews]
 
     with open(DATA_FILE2, 'wb') as f:
         pickle.dump(dev_examples, f)
@@ -69,7 +80,7 @@ def setup():
             if i == int(line['stars']):
                 test_reviews.append(line)
                 j = j + 1
-            if j > 99:
+            if j > test_size:
                 break
     test_examples = [review['text'].lower() for review in test_reviews]
     test_labels = [int(review['stars']) for review in test_reviews]

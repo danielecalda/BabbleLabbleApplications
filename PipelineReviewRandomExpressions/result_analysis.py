@@ -1,5 +1,5 @@
 import pickle
-from src.PipelineReviewRandomTokens.utils import most_frequent, calculate_number_wrong, \
+from src.utils.utils import most_frequent, calculate_number_wrong, \
     create_tokens_from_choiced_explanations, percentage, high_coverage_elements, high_correct_elements, intersection,\
     average
 from metal import LabelModel
@@ -8,7 +8,7 @@ DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'
 
 
-def analyze_for_expressions(ls, parses, iteration_number, modality='most'):
+def analyze_for_expressions(ls, parses, iteration_number, coverage_treshold, correct_treshold, wrong_treshold, modality='most'):
 
     DATA_FILE5 = 'data/results/predicted_training_labels'  + str(iteration_number) + '.pkl'
     DATA_FILE6 = 'data/expressions/correct_expressions_list' + str(iteration_number) + '.pkl'
@@ -79,8 +79,8 @@ def analyze_for_expressions(ls, parses, iteration_number, modality='most'):
 
     L_train_transpose = L_train.T
 
-    over_percentage = high_coverage_elements(L_train_transpose)
-    correct_elements, wrong_elements = high_correct_elements(L_train_transpose, Ys)
+    over_percentage = high_coverage_elements(L_train_transpose, coverage_treshold)
+    correct_elements, wrong_elements = high_correct_elements(L_train_transpose, Ys, correct_treshold, wrong_treshold)
 
     intersect = intersection(over_percentage, correct_elements)
 

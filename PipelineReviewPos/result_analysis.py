@@ -1,6 +1,6 @@
 import pickle
-from src.PipelineReviewRandomTokens.utils import most_frequent, calculate_number_wrong, \
-    create_tokens_from_choiced_explanations, percentage, high_coverage_elements, high_correct_elements, intersection
+from src.utils.utils import most_frequent, calculate_number_wrong, \
+    percentage, high_coverage_elements, high_correct_elements, intersection
 
 DATA_FILE1 = 'data/data.pkl'
 DATA_FILE2 = 'data/labels.pkl'

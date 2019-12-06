@@ -1,7 +1,6 @@
 from collections import Counter
 import re
 import spacy
-import random
 
 
 def most_frequent(line):
@@ -75,34 +74,21 @@ def average_coverage_elements(l_train):
     return sum(coverages)/len(coverages)
 
 
-def high_coverage_elements(l_train):
+def high_coverage_elements(l_train, treshold):
     over_percentage = []
-    average_coverage = average_coverage_elements(l_train)
     for i, line in enumerate(l_train):
         count = 0
         for element in line:
             if element != 0:
                 count += 1
         coverage = percentage(count, len(line))
-        if coverage > 0.3:
+        if coverage > treshold:
             over_percentage.append(i)
-            # print('Coverage of element number: ' + str(i) + ' is ' + str(coverage))
     print('number of over percentage is: ' + str(len(over_percentage)))
     return over_percentage
 
-def high_correct_elements2(l_train):
-    correct_elements = []
-    wrong_elements = []
-    for i, line in enumerate(l_train):
-        counter = Counter(line)
-        values = list(counter.values())
-        if len(values) == 1:
-            correct_elements.append(i)
-            # print('abstain: ' + str(abstain) + ' and correct: ' + str(correct) + ' and wrong: ' + str(wrong))
-    print('number of correct elements is: ' + str(len(correct_elements)))
-    return correct_elements, wrong_elements
 
-def high_correct_elements(l_train, ys):
+def high_correct_elements(l_train, ys, correct_treshold, wrong_treshold):
     correct_elements = []
     wrong_elements = []
     for i, line in enumerate(l_train):
@@ -117,11 +103,23 @@ def high_correct_elements(l_train, ys):
                     correct += 1
                 else:
                     wrong += 1
-        if correct > wrong:
+        if correct > correct_treshold*wrong:
             correct_elements.append(i)
-        elif wrong > 3*correct:
+        elif wrong > wrong_treshold*correct:
             wrong_elements.append(i)
-            #print('abstain: ' + str(abstain) + ' and correct: ' + str(correct) + ' and wrong: ' + str(wrong))
+    print('number of correct elements is: ' + str(len(correct_elements)))
+    return correct_elements, wrong_elements
+
+
+def high_correct_elements2(l_train):
+    correct_elements = []
+    wrong_elements = []
+    for i, line in enumerate(l_train):
+        counter = Counter(line)
+        values = list(counter.values())
+        if len(values) == 1:
+            correct_elements.append(i)
+            # print('abstain: ' + str(abstain) + ' and correct: ' + str(correct) + ' and wrong: ' + str(wrong))
     print('number of correct elements is: ' + str(len(correct_elements)))
     return correct_elements, wrong_elements
 

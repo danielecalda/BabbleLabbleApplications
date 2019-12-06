@@ -2,7 +2,7 @@ import progressbar
 import pickle
 import random
 import spacy
-from src.PipelineReviewRandomTokens.utils import check_adjective_noun, check_adjective_after_verb
+from src.utils.utils import check_adjective_noun, check_adjective_after_verb
 
 DATA_FILE1 = 'data/train_examples.pkl'
 DATA_FILE2 = 'data/train_labels.pkl'
